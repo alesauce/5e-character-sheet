@@ -23,10 +23,10 @@ class DiceRoller:
         self, num_dice_sides: int, num_dice_to_roll: int
     ) -> List[int]:
         if num_dice_to_roll <= 0:
-            logger.error("Gotta roll it at least one time, ya dummy!")
+            raise InvalidInputException(str(num_dice_to_roll), "number greater than 0")
         logger.debug(f"Rolling {num_dice_sides}-sided die {num_dice_to_roll} times")
         all_dice_rolls = []
-        for roll in range(1, num_dice_to_roll, 1):
+        for roll in range(num_dice_to_roll):
             logger.debug(
                 f"On roll {roll} out of {num_dice_to_roll}, {num_dice_to_roll - roll} to go!"
             )
