@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "5e-character-sheet"
+name = "dnd-character-sheet"
 version = "0.1.0"
 description = ""
 authors = ["Alexander Sauceda <alexander@alexandersauceda.dev>"]
 readme = "README.md"
-packages = [{include = "5e_character_sheet"}]
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -13,6 +13,8 @@ ruff = "^0.1.3"
 black = "^23.10.1"
 mypy = "^1.6.1"
 pytest = "^7.4.3"
+pytest-sugar = "^0.9.7"
+tox = "^4.11.3"
 
 [tool.pyright]
 include = ["5e_character_sheet"]
@@ -20,7 +22,7 @@ venvPath = "/Users/alesauce/Workspace/5e-character-sheet/5e-character-sheet"
 venv = ".venv"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
@@ -42,3 +44,46 @@ disallow_untyped_defs = true
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "W291", "W293", "W505", "I"]
+fixable = ["ALL"]
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402"]
+
+[tool.tox]
+legacy_tox_ini = """
+  [tox]
+  min_version = 4.0
+  env_list =
+    py310
+    py39
+    type
+
+  [testenv]
+  allowlist_externals = poetry
+  commands_pre =
+      poetry install --no-root --sync
+
+  [testenv:test]
+  commands =
+    poetry run pytest tests/ --import-mode importlib
+
+  [testenv:type]
+  commands = poetry run mypy src
+
+  [testenv:format]
+  commands =
+    poetry run black src tests
+    poetry run ruff check src tests --fix
+
+  [testenv:release]
+  commands =
+    poetry run pytest tests/ --import-mode importlib
+    poetry run mypy src
+    poetry run black src tests --check --diff --color
+"""
