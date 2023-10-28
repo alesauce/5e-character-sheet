@@ -1,42 +1,18 @@
 import logging
 from typing import List
 
-from dice_roller import DiceRoller
+from dnd_character_sheet.dice_roller import DiceRoller
 
 logging.basicConfig(
     filename="5e_character_sheet_app.log",
     encoding="utf-8",
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(asctime)s: [%(levelname)s] %(message)s",
 )
 logger = logging.getLogger(__name__)
-
-
-def quicksort(nums_to_sort: List[int]) -> List[int]:
-    total_nums_to_sort = len(nums_to_sort)
-    logger.info(f"Sorting {total_nums_to_sort} numbers")
-    if len(nums_to_sort) < 2:
-        logger.debug("Reached base case")
-        return nums_to_sort
-    else:
-        halfway_point = total_nums_to_sort // 2
-        pivot = nums_to_sort[halfway_point]
-        less = [num for num in nums_to_sort[: halfway_point - 1] if num <= pivot]
-        greater = [num for num in nums_to_sort[halfway_point + 1 :] if num <= pivot]
-    return quicksort(less) + [pivot] + quicksort(greater)
-
-
-def sum_list(nums_to_add: List[int]) -> int:
-    total_nums_to_add = len(nums_to_add)
-    logger.debug(f"Summing up {total_nums_to_add} numbers")
-    if total_nums_to_add == 0:
-        logger.debug("Reached base case")
-        return 0
-    elif total_nums_to_add == 1:
-        logger.debug("Reached base case")
-        return nums_to_add[0]
-    else:
-        return nums_to_add[-1] + sum_list(nums_to_add[:-1])
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+dice_roller = DiceRoller()
 
 
 def roll_dice_for_ability_scores() -> List[int]:
@@ -47,12 +23,12 @@ def roll_dice_for_ability_scores() -> List[int]:
     ability_scores_final = []
     completed_rolls = 1
     while completed_rolls <= NUM_TIMES_TO_ROLL:
-        all_dice_rolls = DiceRoller().roll_x_num_of_n_sided_die(
+        all_dice_rolls = dice_roller.roll_x_num_of_n_sided_die(
             NUM_DICE_SIDES, NUM_DICE_TO_ROLL
         )
-        sorted_rolls = quicksort(all_dice_rolls)
+        sorted_rolls = dice_roller.sort_dice_rolls(all_dice_rolls)
         highest_three = sorted_rolls[-3:]
-        ability_score = sum_list(highest_three)
+        ability_score = dice_roller.sum_dice_rolls(highest_three)
         ability_scores_final.append(ability_score)
     return ability_scores_final
 

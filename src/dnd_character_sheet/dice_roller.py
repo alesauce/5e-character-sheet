@@ -9,9 +9,10 @@ logger = logging.getLogger(__name__)
 
 class DiceRoller:
     def __init__(self) -> None:
-        random.seed()
+        pass
 
     def roll_n_sided_die(self, num_dice_sides: int):
+        random.seed()
         if num_dice_sides <= 0:
             raise InvalidInputException(str(num_dice_sides), "number greater than 0")
         logger.debug(f"Rolling {num_dice_sides}-sided die")
@@ -33,3 +34,27 @@ class DiceRoller:
             dice_roll = self.roll_n_sided_die(num_dice_sides)
             all_dice_rolls.append(dice_roll)
         return all_dice_rolls
+
+    def sort_dice_rolls(self, rolls_to_sort: List[int]) -> List[int]:
+        total_nums_to_sort = len(rolls_to_sort)
+        logger.info(f"Sorting {total_nums_to_sort} dice rolls with value(s): {rolls_to_sort}")
+        if len(rolls_to_sort) < 2:
+            logger.debug(f"Reached base case with value(s): {rolls_to_sort}")
+            return rolls_to_sort
+        else:
+            pivot = rolls_to_sort[0]
+            less = [num for num in rolls_to_sort[1:] if num <= pivot]
+            greater = [num for num in rolls_to_sort[1:] if num > pivot]
+            return (self.sort_dice_rolls(less) + [pivot] + self.sort_dice_rolls(greater))
+
+    def sum_dice_rolls(self, rolls_to_sum: List[int]) -> int:
+        total_nums_to_add = len(rolls_to_sum)
+        logger.debug(f"Summing up {total_nums_to_add} numbers")
+        if total_nums_to_add == 0:
+            logger.debug("Reached base case")
+            return 0
+        elif total_nums_to_add == 1:
+            logger.debug("Reached base case")
+            return rolls_to_sum[0]
+        else:
+            return rolls_to_sum[-1] + self.sum_dice_rolls(rolls_to_sum[:-1])
