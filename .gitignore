@@ -10,3 +10,5 @@ _build
 
 # Unit test/coverage reports
 .tox/
+*__pycache__*
+.coverage

@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Alexander Sauceda <alexander@alexandersauceda.dev>"]
 readme = "README.md"
-packages = [{include = "src"}]
+packages = [{include = "dnd_character_sheet", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -15,7 +15,11 @@ mypy = "^1.6.1"
 pytest = "^7.4.3"
 pytest-sugar = "^0.9.7"
 tox = "^4.11.3"
+coverage = "^7.3.2"
 pytest-cov = "^4.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
 
 [tool.pyright]
 include = ["5e_character_sheet"]
@@ -70,75 +74,3 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402"]
-
-
-[tool.pytest.ini-options]
-addopts = [
-  "--cov=src --cov-report html"
-]
-
-[tool.coverage.run]
-branch = true
-
-[tool.coverage.report]
-# Regexes for lines to exclude from consideration
-exclude_also = [
-    # Don't complain about missing debug-only code:
-    "def __repr__",
-    "if self\\.debug",
-
-    # Don't complain if tests don't hit defensive assertion code:
-    "raise AssertionError",
-    "raise NotImplementedError",
-
-    # Don't complain if non-runnable code isn't run:
-    "if 0:",
-    "if __name__ == .__main__.:",
-
-    # Don't complain about abstract methods, they aren't run:
-    "@(abc\\.)?abstractmethod",
-    ]
-
-ignore_errors = true
-
-[tool.coverage.html]
-directory = "coverage_html_report"
-
-[tool.tox]
-legacy_tox_ini = """
-  [tox]
-  min_version = 4.0
-  env_list =
-    py310
-    py39
-    type
-
-  [testenv]
-  description = "Top-level config to use tox with poetry"
-  allowlist_externals = poetry
-  commands_pre =
-      poetry install --no-root --sync
-
-  [testenv:test]
-  description = "Running tests only"
-  commands =
-    poetry run pytest tests/ --import-mode importlib
-
-  [testenv:type]
-  description = "Type-checking with mypy"
-  commands = poetry run mypy src
-
-  [testenv:format]
-  description = "Formatting code with black and ruff"
-  commands =
-    poetry run ruff check src tests --fix
-    poetry run black src tests
-
-  [testenv:release]
-  description = "Running all CI tools in check mode on the package"
-  commands =
-    poetry run pytest tests/ --import-mode importlib
-    poetry run mypy src
-    poetry run ruff check src tests
-    poetry run black src tests --check --diff --color
-"""

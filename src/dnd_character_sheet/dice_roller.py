@@ -2,7 +2,7 @@ import logging
 import random
 from typing import List
 
-from utils.exceptions import InvalidInputException
+from dnd_character_sheet.utils.exceptions import InvalidInputException
 
 logger = logging.getLogger(__name__)
 
