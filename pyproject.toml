@@ -15,6 +15,7 @@ mypy = "^1.6.1"
 pytest = "^7.4.3"
 pytest-sugar = "^0.9.7"
 tox = "^4.11.3"
+pytest-cov = "^4.1.0"
 
 [tool.pyright]
 include = ["5e_character_sheet"]
@@ -46,7 +47,22 @@ init_typed = true
 warn_required_dynamic_aliases = true
 
 [tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "W291", "W293", "W505", "I"]
+# All rules below correspond to a ruleset on the Ruff website:
+# https://docs.astral.sh/ruff/rules/
+# When only one number is supplied after the letter, it acts as a prefix match for
+# all rules with that letter/number at the start
+select = [
+  "E4",
+  "E7",
+  "E9",
+  "F",
+  "W291",
+  "W293",
+  "W505",
+  "I",
+  "B",
+  "SIM",
+]
 fixable = ["ALL"]
 
 # Allow unused variables when underscore-prefixed.
@@ -54,6 +70,39 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402"]
+
+
+[tool.pytest.ini-options]
+addopts = [
+  "--cov=src --cov-report html"
+]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_also = [
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self\\.debug",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+    ]
+
+ignore_errors = true
+
+[tool.coverage.html]
+directory = "coverage_html_report"
 
 [tool.tox]
 legacy_tox_ini = """
@@ -65,25 +114,31 @@ legacy_tox_ini = """
     type
 
   [testenv]
+  description = "Top-level config to use tox with poetry"
   allowlist_externals = poetry
   commands_pre =
       poetry install --no-root --sync
 
   [testenv:test]
+  description = "Running tests only"
   commands =
     poetry run pytest tests/ --import-mode importlib
 
   [testenv:type]
+  description = "Type-checking with mypy"
   commands = poetry run mypy src
 
   [testenv:format]
+  description = "Formatting code with black and ruff"
   commands =
     poetry run black src tests
     poetry run ruff check src tests --fix
 
   [testenv:release]
+  description = "Running all CI tools in check mode on the package"
   commands =
     poetry run pytest tests/ --import-mode importlib
     poetry run mypy src
+    poetry run ruff check src tests
     poetry run black src tests --check --diff --color
 """
