@@ -1,7 +1,6 @@
+import pytest
 from dnd_character_sheet.dice_roller import DiceRoller
 from dnd_character_sheet.utils.exceptions import InvalidInputException
-import pytest
-
 
 dice_roller = DiceRoller()
 

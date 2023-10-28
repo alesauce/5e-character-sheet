@@ -131,8 +131,8 @@ legacy_tox_ini = """
   [testenv:format]
   description = "Formatting code with black and ruff"
   commands =
-    poetry run black src tests
     poetry run ruff check src tests --fix
+    poetry run black src tests
 
   [testenv:release]
   description = "Running all CI tools in check mode on the package"

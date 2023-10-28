@@ -1,8 +1,8 @@
-import random
 import logging
+import random
 from typing import List
-from utils.exceptions import InvalidInputException
 
+from utils.exceptions import InvalidInputException
 
 logger = logging.getLogger(__name__)
 
@@ -33,5 +33,3 @@ class DiceRoller:
             dice_roll = self.roll_n_sided_die(num_dice_sides)
             all_dice_rolls.append(dice_roll)
         return all_dice_rolls
-
-

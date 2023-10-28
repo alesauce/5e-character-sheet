@@ -1,7 +1,7 @@
 import logging
 from typing import List
-from dice_roller import DiceRoller
 
+from dice_roller import DiceRoller
 
 logging.basicConfig(
     filename="5e_character_sheet_app.log",
@@ -55,6 +55,7 @@ def roll_dice_for_ability_scores() -> List[int]:
         ability_score = sum_list(highest_three)
         ability_scores_final.append(ability_score)
     return ability_scores_final
+
 
 def create_character_sheet_from_scratch():
     """
