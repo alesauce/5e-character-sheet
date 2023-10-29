@@ -35,6 +35,13 @@ class DiceRoller:
             all_dice_rolls.append(dice_roll)
         return all_dice_rolls
 
+    """
+    Idea to try to implement quicksort with a random pivot point:
+        1. decide on the pivot point, either with a PRNG, or by picking the halway point
+        1. (potential helper method) create a new list of every element but the pivot point
+        1. run the less/greater than methods on those lists (potential helper method)
+        1. recurse with the less than/greater than lists after
+    """
     def sort_dice_rolls(self, rolls_to_sort: List[int]) -> List[int]:
         total_nums_to_sort = len(rolls_to_sort)
         logger.info(f"Sorting {total_nums_to_sort} dice rolls with value(s): {rolls_to_sort}")

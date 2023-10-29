@@ -8,6 +8,13 @@ ACCEPTABLE_STATUS_CODES = [200]
 logger = logging.getLogger(__name__)
 
 
+"""
+Idea here:
+    1. Create an SrdApiRequest model
+    1. Create the base endpoint enum (and others as needed)
+    1. Use the SrdApiRequest model to to create new request objects and send them to API
+"""
+
 class SrdApiBaseEndpoints(Enum):
     RACES = "races"
     CLASSES = "classes"
