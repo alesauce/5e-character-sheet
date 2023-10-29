@@ -21,8 +21,9 @@ def roll_dice_for_ability_scores() -> List[int]:
     NUM_TIMES_TO_ROLL = 6
     logger.info("Rolling to determine ability scores.")
     ability_scores_final = []
-    completed_rolls = 1
-    while completed_rolls <= NUM_TIMES_TO_ROLL:
+    attempted_rolls = 1
+    while attempted_rolls <= NUM_TIMES_TO_ROLL:
+        logger.debug(f"Attempting roll {attempted_rolls} out of {NUM_TIMES_TO_ROLL}")
         all_dice_rolls = dice_roller.roll_x_num_of_n_sided_die(
             NUM_DICE_SIDES, NUM_DICE_TO_ROLL
         )
@@ -30,7 +31,12 @@ def roll_dice_for_ability_scores() -> List[int]:
         highest_three = sorted_rolls[-3:]
         ability_score = dice_roller.sum_dice_rolls(highest_three)
         ability_scores_final.append(ability_score)
+        attempted_rolls += 1
     return ability_scores_final
+
+
+def get_all_srd_races():
+    pass
 
 
 def create_character_sheet_from_scratch():
