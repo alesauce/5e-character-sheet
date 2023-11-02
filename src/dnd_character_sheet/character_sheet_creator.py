@@ -2,6 +2,7 @@ import logging
 from typing import List
 
 from dnd_character_sheet.dice_roller import DiceRoller
+from dnd_character_sheet.utils.srd_api_reader import SrdApiReader, SrdApiBaseEndpoints
 
 logging.basicConfig(
     filename="5e_character_sheet_app.log",
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
 dice_roller = DiceRoller()
+srd_reader = SrdApiReader()
 
 
 def roll_dice_for_ability_scores() -> List[int]:
@@ -36,7 +38,9 @@ def roll_dice_for_ability_scores() -> List[int]:
 
 
 def get_all_srd_races():
-    pass
+    logger.info("Getting all races from the SRD API.")
+    all_races = srd_reader.get_base_endpoint(SrdApiBaseEndpoints.RACES)
+    print(all_races)
 
 
 def create_character_sheet_from_scratch():
