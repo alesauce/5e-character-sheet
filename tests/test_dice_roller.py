@@ -29,16 +29,32 @@ def test_roll_x_num_of_n_sided_die():
     assert len(roll_4_d20) == 4
 
 
-def test_sum_list():
-    test_list = [1, 2, 4, 26, 358, 4003]
-    total = dice_roller.sum_dice_rolls(test_list)
+def test_sum_dice_rolls(random_number_list):
+    total = dice_roller.sum_dice_rolls(random_number_list)
     assert total is not None
-    assert total == 4394
+    assert total == 3635953
 
 
-def test_quicksort(caplog):
+def test_sum_dice_rolls_no_numbers():
+    total = dice_roller.sum_dice_rolls([])
+    assert total is not None
+    assert total == 0
+
+
+def test_sort_dice_rolls(caplog, random_number_list):
     caplog.set_level(logging.DEBUG)
-    test_list = [766371, 222767, 385105, 754958, 853470, 118746, 534536]
-    sorted_list = dice_roller.sort_dice_rolls(test_list)
+    sorted_list = dice_roller.sort_dice_rolls(random_number_list)
     assert sorted_list is not None
     assert sorted_list == [118746, 222767, 385105, 534536, 754958, 766371, 853470]
+
+
+def test_partition_list_last_index(random_number_list):
+    partitioned_list = dice_roller._partition_list_from_pivot_point(6, random_number_list)
+    assert partitioned_list is not None
+    assert partitioned_list == [766371, 222767, 385105, 754958, 853470, 118746]
+
+
+def test_partition_list_first_index(random_number_list):
+    partitioned_list = dice_roller._partition_list_from_pivot_point(0, random_number_list)
+    assert partitioned_list is not None
+    assert partitioned_list == [222767, 385105, 754958, 853470, 118746, 534536]

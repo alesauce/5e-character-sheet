@@ -1,6 +1,5 @@
 import logging
 import random
-from typing import List
 
 from dnd_character_sheet.utils.exceptions import InvalidInputException
 
@@ -22,7 +21,7 @@ class DiceRoller:
 
     def roll_x_num_of_n_sided_die(
         self, num_dice_sides: int, num_dice_to_roll: int
-    ) -> List[int]:
+    ) -> list[int]:
         if num_dice_to_roll <= 0:
             raise InvalidInputException(str(num_dice_to_roll), "number greater than 0")
         logger.debug(f"Rolling {num_dice_sides}-sided die {num_dice_to_roll} times")
@@ -35,26 +34,38 @@ class DiceRoller:
             all_dice_rolls.append(dice_roll)
         return all_dice_rolls
 
-    """
-    Idea to try to implement quicksort with a random pivot point:
-        1. decide on the pivot point, either with a PRNG, or by picking the halway point
-        1. (potential helper method) create a new list of every element but the pivot point
-        1. run the less/greater than methods on those lists (potential helper method)
-        1. recurse with the less than/greater than lists after
-    """
-    def sort_dice_rolls(self, rolls_to_sort: List[int]) -> List[int]:
+    def sort_dice_rolls(self, rolls_to_sort: list[int]) -> list[int]:
         total_nums_to_sort = len(rolls_to_sort)
         logger.info(f"Sorting {total_nums_to_sort} dice rolls with value(s): {rolls_to_sort}")
         if len(rolls_to_sort) < 2:
             logger.debug(f"Reached base case with value(s): {rolls_to_sort}")
             return rolls_to_sort
         else:
-            pivot = rolls_to_sort[0]
-            less = [num for num in rolls_to_sort[1:] if num <= pivot]
-            greater = [num for num in rolls_to_sort[1:] if num > pivot]
+            random.seed()
+            pivot_index = random.randrange(0, len(rolls_to_sort))
+            pivot = rolls_to_sort[pivot_index]
+            partitioned_list = self._partition_list_from_pivot_point(pivot_index, rolls_to_sort)
+            less = [num for num in partitioned_list if num <= pivot]
+            greater = [num for num in partitioned_list if num > pivot]
             return (self.sort_dice_rolls(less) + [pivot] + self.sort_dice_rolls(greater))
 
-    def sum_dice_rolls(self, rolls_to_sum: List[int]) -> int:
+    def _partition_list_from_pivot_point(self, pivot_index: int, list_to_partition: list[int]) -> list[int]:
+        logger.info(f"Partitioning list from index {pivot_index} with value: {list_to_partition[pivot_index]}")
+        if (pivot_index == (len(list_to_partition) - 1)):
+            logger.debug("No items after pivot index.")
+            list_items_after = []
+        else:
+            list_items_after = list_to_partition[(pivot_index + 1):]
+        if (pivot_index == 0):
+            logger.debug("No items before pivot index.")
+            list_items_before = []
+        else:
+            list_items_before = list_to_partition[:pivot_index]
+        partitioned_list = list_items_before + list_items_after
+        logger.debug(f"Created new partitioned list: {partitioned_list=}")
+        return partitioned_list
+
+    def sum_dice_rolls(self, rolls_to_sum: list[int]) -> int:
         total_nums_to_add = len(rolls_to_sum)
         logger.debug(f"Summing up {total_nums_to_add} numbers")
         if total_nums_to_add == 0:
