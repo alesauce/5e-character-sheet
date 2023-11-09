@@ -4,6 +4,7 @@ from typing import List
 from dnd_character_sheet.dice_roller import DiceRoller
 from dnd_character_sheet.controllers.srd_api_controller import SrdApiController, SrdApiBaseEndpoints
 
+# TODO: https://docs.pydantic.dev/latest/integrations/datamodel_code_generator/
 logging.basicConfig(
     filename="5e_character_sheet_app.log",
     encoding="utf-8",
