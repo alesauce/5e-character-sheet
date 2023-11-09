@@ -46,15 +46,3 @@ def test_sort_dice_rolls(caplog, random_number_list):
     sorted_list = dice_roller.sort_dice_rolls(random_number_list)
     assert sorted_list is not None
     assert sorted_list == [118746, 222767, 385105, 534536, 754958, 766371, 853470]
-
-
-def test_partition_list_last_index(random_number_list):
-    partitioned_list = dice_roller._partition_list_from_pivot_point(6, random_number_list)
-    assert partitioned_list is not None
-    assert partitioned_list == [766371, 222767, 385105, 754958, 853470, 118746]
-
-
-def test_partition_list_first_index(random_number_list):
-    partitioned_list = dice_roller._partition_list_from_pivot_point(0, random_number_list)
-    assert partitioned_list is not None
-    assert partitioned_list == [222767, 385105, 754958, 853470, 118746, 534536]

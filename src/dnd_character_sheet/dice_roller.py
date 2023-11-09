@@ -43,27 +43,10 @@ class DiceRoller:
         else:
             random.seed()
             pivot_index = random.randrange(0, len(rolls_to_sort))
-            pivot = rolls_to_sort[pivot_index]
-            partitioned_list = self._partition_list_from_pivot_point(pivot_index, rolls_to_sort)
-            less = [num for num in partitioned_list if num <= pivot]
-            greater = [num for num in partitioned_list if num > pivot]
+            pivot = rolls_to_sort.pop(pivot_index)
+            less = [num for num in rolls_to_sort if num <= pivot]
+            greater = [num for num in rolls_to_sort if num > pivot]
             return (self.sort_dice_rolls(less) + [pivot] + self.sort_dice_rolls(greater))
-
-    def _partition_list_from_pivot_point(self, pivot_index: int, list_to_partition: list[int]) -> list[int]:
-        logger.info(f"Partitioning list from index {pivot_index} with value: {list_to_partition[pivot_index]}")
-        if (pivot_index == (len(list_to_partition) - 1)):
-            logger.debug("No items after pivot index.")
-            list_items_after = []
-        else:
-            list_items_after = list_to_partition[(pivot_index + 1):]
-        if (pivot_index == 0):
-            logger.debug("No items before pivot index.")
-            list_items_before = []
-        else:
-            list_items_before = list_to_partition[:pivot_index]
-        partitioned_list = list_items_before + list_items_after
-        logger.debug(f"Created new partitioned list: {partitioned_list=}")
-        return partitioned_list
 
     def sum_dice_rolls(self, rolls_to_sum: list[int]) -> int:
         total_nums_to_add = len(rolls_to_sum)
