@@ -20,7 +20,7 @@ Idea here:
     1. Use the SrdApiRequest model to to create new request objects and send them to API
 """
 
-class SrdApiReader:
+class SrdApiController:
     def __init__(self) -> None:
         pass
 

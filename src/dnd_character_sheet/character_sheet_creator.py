@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from dnd_character_sheet.dice_roller import DiceRoller
-from dnd_character_sheet.utils.srd_api_reader import SrdApiReader, SrdApiBaseEndpoints
+from dnd_character_sheet.controllers.srd_api_controller import SrdApiController, SrdApiBaseEndpoints
 
 logging.basicConfig(
     filename="5e_character_sheet_app.log",
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
 dice_roller = DiceRoller()
-srd_reader = SrdApiReader()
+srd_reader = SrdApiController()
 
 
 def roll_dice_for_ability_scores() -> List[int]:
@@ -27,10 +27,9 @@ def roll_dice_for_ability_scores() -> List[int]:
     while attempted_rolls <= NUM_TIMES_TO_ROLL:
         logger.debug(f"Attempting roll {attempted_rolls} out of {NUM_TIMES_TO_ROLL}")
         all_dice_rolls = dice_roller.roll_x_num_of_n_sided_die(
-            NUM_DICE_SIDES, NUM_DICE_TO_ROLL
+            NUM_DICE_SIDES, NUM_DICE_TO_ROLL, True
         )
-        sorted_rolls = dice_roller.sort_dice_rolls(all_dice_rolls)
-        highest_three = sorted_rolls[-3:]
+        highest_three = all_dice_rolls[-3:]
         ability_score = dice_roller.sum_dice_rolls(highest_three)
         ability_scores_final.append(ability_score)
         attempted_rolls += 1
