@@ -1,5 +1,6 @@
 import logging
 import random
+from typing import Optional
 
 from dnd_character_sheet.utils.exceptions import InvalidInputException
 
@@ -20,7 +21,7 @@ class DiceRoller:
         return dice_roll
 
     def roll_x_num_of_n_sided_die(
-        self, num_dice_sides: int, num_dice_to_roll: int
+        self, num_dice_sides: int, num_dice_to_roll: int, sort_rolls: Optional[bool] = False
     ) -> list[int]:
         if num_dice_to_roll <= 0:
             raise InvalidInputException(str(num_dice_to_roll), "number greater than 0")
@@ -32,21 +33,9 @@ class DiceRoller:
             )
             dice_roll = self.roll_n_sided_die(num_dice_sides)
             all_dice_rolls.append(dice_roll)
+        if sort_rolls:
+            all_dice_rolls.sort()
         return all_dice_rolls
-
-    def sort_dice_rolls(self, rolls_to_sort: list[int]) -> list[int]:
-        total_nums_to_sort = len(rolls_to_sort)
-        logger.info(f"Sorting {total_nums_to_sort} dice rolls with value(s): {rolls_to_sort}")
-        if len(rolls_to_sort) < 2:
-            logger.debug(f"Reached base case with value(s): {rolls_to_sort}")
-            return rolls_to_sort
-        else:
-            random.seed()
-            pivot_index = random.randrange(0, len(rolls_to_sort))
-            pivot = rolls_to_sort.pop(pivot_index)
-            less = [num for num in rolls_to_sort if num <= pivot]
-            greater = [num for num in rolls_to_sort if num > pivot]
-            return (self.sort_dice_rolls(less) + [pivot] + self.sort_dice_rolls(greater))
 
     def sum_dice_rolls(self, rolls_to_sum: list[int]) -> int:
         total_nums_to_add = len(rolls_to_sum)
